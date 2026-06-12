@@ -1,0 +1,44 @@
+# Map Coloring using CSP
+
+states = ["A", "B", "C", "D"]
+
+neighbors = {
+    "A": ["B", "C"],
+    "B": ["A", "C", "D"],
+    "C": ["A", "B", "D"],
+    "D": ["B", "C"]
+}
+
+colors = ["Red", "Green", "Blue"]
+
+solution = {}
+
+def is_safe(state, color):
+    for neighbor in neighbors[state]:
+        if neighbor in solution and solution[neighbor] == color:
+            return False
+    return True
+
+def solve(state_index):
+    if state_index == len(states):
+        return True
+
+    state = states[state_index]
+
+    for color in colors:
+        if is_safe(state, color):
+            solution[state] = color
+
+            if solve(state_index + 1):
+                return True
+
+            del solution[state]
+
+    return False
+
+if solve(0):
+    print("Map Coloring Solution:")
+    for state in states:
+        print(state, "->", solution[state])
+else:
+    print("No solution found")
